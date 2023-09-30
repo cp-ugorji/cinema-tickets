@@ -77,4 +77,14 @@ public class TicketServiceImplTest {
         verify(paymentService).makePayment(1L, 390);
         verify(reservationService).reserveSeat(1L, 20);
     }
+
+    @Test(expected = InvalidPurchaseException.class)
+    public void shouldThrowExceptionForNoTickets() {
+        ticketService.purchaseTickets(1L);
+    }
+
+    @Test(expected = InvalidPurchaseException.class)
+    public void shouldThrowExceptionForNegativeNumberOfTickets() {
+        ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, -1));
+    }
 }
