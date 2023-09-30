@@ -25,4 +25,9 @@ public class TicketServiceImplTest {
     public void shouldThrowExceptionForInvalidAccountId() {
         ticketService.purchaseTickets(0L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1));
     }
+
+    @Test(expected = InvalidPurchaseException.class)
+    public void shouldThrowExceptionForChildWithNoAdultTickets() {
+        ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1));
+    }
 }
