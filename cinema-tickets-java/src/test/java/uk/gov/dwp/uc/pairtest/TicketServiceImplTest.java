@@ -14,5 +14,6 @@ public class TicketServiceImplTest {
     public void setup() {
         paymentService = mock(TicketPaymentService.class);
         reservationService = mock(SeatReservationService.class);
+        ticketService = new TicketServiceImpl(paymentService, reservationService);
     }
 }
