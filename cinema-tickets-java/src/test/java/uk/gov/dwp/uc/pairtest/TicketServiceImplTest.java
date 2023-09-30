@@ -37,4 +37,16 @@ public class TicketServiceImplTest {
                 new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 15),
                 new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 6));
     }
+
+    @Test
+    public void shouldMakePaymentAndReserveSeats() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 2),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1),
+                new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1));
+
+        verify(paymentService).makePayment(1L, 50);
+        verify(reservationService).reserveSeat(1L, 3);
+    }
+
 }
