@@ -21,11 +21,28 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
         validateAccountId(accountId);
+        validateTicketRequests(ticketTypeRequests);
     }
 
     private void validateAccountId(Long accountId) {
         if (accountId <= 0) {
             throw new InvalidPurchaseException("Invalid account ID");
+        }
+    }
+
+    private void validateTicketRequests(TicketTypeRequest... ticketTypeRequests) {
+        int adultTickets = 0;
+        int totalTickets = 0;
+
+        for (TicketTypeRequest request : ticketTypeRequests) {
+            if (request.getTicketType() == TicketTypeRequest.Type.ADULT) {
+                adultTickets += request.getNoOfTickets();
+            }
+            totalTickets += request.getNoOfTickets();
+        }
+
+        if (adultTickets == 0) {
+            throw new InvalidPurchaseException("Cannot purchase Child or Infant tickets without purchasing Adult tickets");
         }
     }
 
