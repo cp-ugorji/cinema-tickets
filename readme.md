@@ -83,3 +83,22 @@ If not, an InvalidPurchaseException is thrown. Some of the validations done are:
    - Calculates the total amount to be paid and the total seats to be reserved based on the ticket requests. 
    - Makes a payment request to TicketPaymentService with the total amount to be paid.
    - Makes a seat reservation request to SeatReservationService with the total seats to be reserved.
+     
+## Test Coverage
+
+15 unit tests was written, resulting in a 93% code coverage.
+- `shouldThrowExceptionForInvalidAccountId`
+- `shouldThrowExceptionForChildWithNoAdultTickets`
+- `shouldThrowExceptionForZeroAdultTicketsWithChild`
+- `shouldThrowExceptionForMoreThan20Tickets`
+- `shouldMakePaymentAndReserveSeats`
+- `shouldHandleOnlyAdultTickets`
+- `shouldHandleChildAndInfantWithAdult`
+- `shouldHandleMaxAllowedTickets`
+- `shouldThrowExceptionForNoTickets`
+- `shouldThrowExceptionForNegativeNumberOfTickets`
+- `shouldCalculateCorrectAmountForAdultTickets`
+- `shouldCalculateCorrectAmountForMixedTickets`
+- `shouldReserveCorrectNumberOfSeatsForMixedTickets`
+- `shouldReserveSeatsForAdultTicketsOnly`
+- `shouldNotReserveSeatsForInfantTickets`
