@@ -30,4 +30,11 @@ public class TicketServiceImplTest {
     public void shouldThrowExceptionForChildWithNoAdultTickets() {
         ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1));
     }
+
+    @Test(expected = InvalidPurchaseException.class)
+    public void shouldThrowExceptionForMoreThan20Tickets() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 15),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 6));
+    }
 }
