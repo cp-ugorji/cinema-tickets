@@ -22,6 +22,12 @@ public class TicketServiceImpl implements TicketService {
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
         validateAccountId(accountId);
         validateTicketRequests(ticketTypeRequests);
+
+        int totalAmountToPay = calculateTotalAmount(ticketTypeRequests);
+        int totalSeatsToReserve = calculateTotalSeatsToReserve(ticketTypeRequests);
+
+        ticketPaymentService.makePayment(accountId, totalAmountToPay);
+        seatReservationService.reserveSeat(accountId, totalSeatsToReserve);
     }
 
     private void validateAccountId(Long accountId) {
@@ -49,5 +55,25 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidPurchaseException("Cannot purchase more than 20 tickets at a time");
         }
     }
+    private int calculateTotalAmount(TicketTypeRequest... ticketTypeRequests) {
+        int totalAmount = 0;
+        for (TicketTypeRequest request : ticketTypeRequests) {
+            switch (request.getTicketType()) {
+                case ADULT -> totalAmount += 20 * request.getNoOfTickets();
+                case CHILD -> totalAmount += 10 * request.getNoOfTickets();
+                case INFANT -> {} // Child/Infant tickets are free
+            }
+        }
+        return totalAmount;
+    }
 
+    private int calculateTotalSeatsToReserve(TicketTypeRequest... ticketTypeRequests) {
+        int totalSeats = 0;
+        for (TicketTypeRequest request : ticketTypeRequests) {
+            if (request.getTicketType() != TicketTypeRequest.Type.INFANT) {
+                totalSeats += request.getNoOfTickets();
+            }
+        }
+        return totalSeats;
+    }
 }
