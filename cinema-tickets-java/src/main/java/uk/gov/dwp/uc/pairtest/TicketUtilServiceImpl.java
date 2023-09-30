@@ -1,5 +1,6 @@
 package uk.gov.dwp.uc.pairtest;
 
+import uk.gov.dwp.uc.pairtest.domain.TicketConstants;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
@@ -37,16 +38,16 @@ public class TicketUtilServiceImpl implements TicketUtilService{
             throw new InvalidPurchaseException("Cannot purchase Child or Infant tickets without purchasing Adult tickets");
         }
 
-        if (totalTickets > 20) {
-            throw new InvalidPurchaseException("Cannot purchase more than 20 tickets at a time");
+        if (totalTickets > TicketConstants.MAX_TICKETS_PURCHASABLE) {
+            throw new InvalidPurchaseException("Cannot purchase more than " + TicketConstants.MAX_TICKETS_PURCHASABLE + " tickets at a time");
         }
     }
     public int calculateTotalAmount(TicketTypeRequest... ticketTypeRequests) {
         int totalAmount = 0;
         for (TicketTypeRequest request : ticketTypeRequests) {
             switch (request.getTicketType()) {
-                case ADULT -> totalAmount += 20 * request.getNoOfTickets();
-                case CHILD -> totalAmount += 10 * request.getNoOfTickets();
+                case ADULT -> totalAmount += TicketConstants.ADULT_TICKET_PRICE * request.getNoOfTickets();
+                case CHILD -> totalAmount += TicketConstants.CHILD_TICKET_PRICE * request.getNoOfTickets();
                 case INFANT -> {} // Child/Infant tickets are free
             }
         }
