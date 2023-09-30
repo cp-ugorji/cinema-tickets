@@ -32,6 +32,13 @@ public class TicketServiceImplTest {
     }
 
     @Test(expected = InvalidPurchaseException.class)
+    public void shouldThrowExceptionForZeroAdultTicketsWithChild() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 0),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1));
+    }
+
+    @Test(expected = InvalidPurchaseException.class)
     public void shouldThrowExceptionForMoreThan20Tickets() {
         ticketService.purchaseTickets(1L,
                 new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 15),
@@ -86,5 +93,42 @@ public class TicketServiceImplTest {
     @Test(expected = InvalidPurchaseException.class)
     public void shouldThrowExceptionForNegativeNumberOfTickets() {
         ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, -1));
+    }
+
+    @Test
+    public void shouldCalculateCorrectAmountForAdultTickets() {
+        ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 3));
+        verify(paymentService).makePayment(1L, 60);
+    }
+
+    @Test
+    public void shouldCalculateCorrectAmountForMixedTickets() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 2),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 3));
+        verify(paymentService).makePayment(1L, 70);
+    }
+
+    @Test
+    public void shouldReserveCorrectNumberOfSeatsForMixedTickets() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 2),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 3),
+                new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1));
+        verify(reservationService).reserveSeat(1L, 5);
+    }
+
+    @Test
+    public void shouldReserveSeatsForAdultTicketsOnly() {
+        ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 3));
+        verify(reservationService).reserveSeat(1L, 3);
+    }
+
+    @Test
+    public void shouldNotReserveSeatsForInfantTickets() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1),
+                new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1));
+        verify(reservationService).reserveSeat(1L, 1);
     }
 }
