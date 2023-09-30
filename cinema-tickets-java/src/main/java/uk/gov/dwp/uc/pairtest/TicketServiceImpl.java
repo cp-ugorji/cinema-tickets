@@ -41,6 +41,10 @@ public class TicketServiceImpl implements TicketService {
         int totalTickets = 0;
 
         for (TicketTypeRequest request : ticketTypeRequests) {
+            if (request.getNoOfTickets() <= 0) {
+                throw new InvalidPurchaseException("Number of tickets should be positive");
+            }
+
             if (request.getTicketType() == TicketTypeRequest.Type.ADULT) {
                 adultTickets += request.getNoOfTickets();
             }
