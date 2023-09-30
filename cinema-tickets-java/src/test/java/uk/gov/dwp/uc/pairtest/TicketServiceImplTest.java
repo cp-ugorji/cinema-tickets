@@ -1,9 +1,11 @@
 package uk.gov.dwp.uc.pairtest;
 
+import org.junit.Assert;
 import org.junit.Before;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import thirdparty.paymentgateway.TicketPaymentService;
 import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
@@ -13,13 +15,14 @@ public class TicketServiceImplTest {
     private TicketServiceImpl ticketService;
     private TicketPaymentService paymentService;
     private SeatReservationService reservationService;
+    private TicketUtilsImpl ticketUtils;
 
     @Before
     public void setup() {
         paymentService = mock(TicketPaymentService.class);
         reservationService = mock(SeatReservationService.class);
-        TicketUtilsImpl ticketUtilService = new TicketUtilsImpl();
-        ticketService = new TicketServiceImpl(paymentService, reservationService, ticketUtilService);
+        ticketUtils = new TicketUtilsImpl();
+        ticketService = new TicketServiceImpl(paymentService, reservationService, ticketUtils);
     }
 
     @Test(expected = InvalidPurchaseException.class)
@@ -131,5 +134,37 @@ public class TicketServiceImplTest {
                 new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1),
                 new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1));
         verify(reservationService).reserveSeat(1L, 1);
+    }
+
+    @Test
+    public void validateTicketRequests_NullRequest_ShouldThrowException() {
+        // Arrange: Creating an array with a null request
+        TicketTypeRequest[] requests = {null};
+
+        // Act & Assert: Expecting an exception when passing a null request
+        InvalidPurchaseException thrown = Assertions.assertThrows(
+                InvalidPurchaseException.class,
+                () -> ticketUtils.validateTicketRequests(requests),
+                "Expected validateTicketRequests to throw, but it didn't"
+        );
+
+        // Assert: Verify the message of the thrown exception
+        Assert.assertTrue(thrown.getMessage().contains("Ticket request or ticket type cannot be null"));
+    }
+
+    @Test
+    public void validateTicketRequests_NullTicketType_ShouldThrowException() {
+        // Arrange: Creating a TicketTypeRequest with a null TicketType
+        TicketTypeRequest requestWithNullType = new TicketTypeRequest(null, 1);
+
+        // Act & Assert: Expecting an exception when passing a request with a null TicketType
+        InvalidPurchaseException thrown = Assertions.assertThrows(
+                InvalidPurchaseException.class,
+                () -> ticketUtils.validateTicketRequests(requestWithNullType),
+                "Expected validateTicketRequests to throw, but it didn't"
+        );
+
+        // Assert: Verify the message of the thrown exception
+        Assert.assertTrue(thrown.getMessage().contains("Ticket request or ticket type cannot be null"));
     }
 }
