@@ -69,9 +69,12 @@ Provide a working implementation of a `TicketService` that:
 - Rejects any invalid ticket purchase requests. It is up to you to identify what should be deemed as an invalid purchase request.
 
 ## My Solution
-1. The `TicketServiceImpl` class is initialized with instances of `TicketPaymentService` and `SeatReservationService`.
 
-2. The `purchaseTickets` method first validates the input parameters to ensure they adhere to the rules and constraints mentioned. 
+I wrote the code to be easily understood even for a newbie. Below is a summary of my approach to solving the problem;
+
+1. The `TicketServiceImpl` class is initialized with instances of `TicketUtils`, `TicketPaymentService` and `SeatReservationService`.
+
+2. The `purchaseTickets` method first validates the input parameters using `TicketUtils` to ensure they adhere to the rules and constraints mentioned. 
 If not, an InvalidPurchaseException is thrown. Some of the validations done are:
    - It validates that the `accountId` is greater than zero.
    - It iterates through the `ticketTypeRequests` to count the number of adult, child, and infant tickets requested.
@@ -86,7 +89,7 @@ If not, an InvalidPurchaseException is thrown. Some of the validations done are:
      
 ## Test Coverage
 
-15 unit tests was written, resulting in a 93% code coverage.
+17 unit tests was written for `TicketServiceImpl`, resulting in at least 80% code coverage.
 - `shouldThrowExceptionForInvalidAccountId`
 - `shouldThrowExceptionForChildWithNoAdultTickets`
 - `shouldThrowExceptionForZeroAdultTicketsWithChild`
@@ -102,3 +105,5 @@ If not, an InvalidPurchaseException is thrown. Some of the validations done are:
 - `shouldReserveCorrectNumberOfSeatsForMixedTickets`
 - `shouldReserveSeatsForAdultTicketsOnly`
 - `shouldNotReserveSeatsForInfantTickets`
+- `shouldThrowExceptionForNullRequest`
+- `shouldThrowExceptionForNullTicketType`

@@ -137,7 +137,7 @@ public class TicketServiceImplTest {
     }
 
     @Test
-    public void validateTicketRequests_NullRequest_ShouldThrowException() {
+    public void shouldThrowExceptionForNullRequest() {
         // Arrange: Creating an array with a null request
         TicketTypeRequest[] requests = {null};
 
@@ -153,7 +153,7 @@ public class TicketServiceImplTest {
     }
 
     @Test
-    public void validateTicketRequests_NullTicketType_ShouldThrowException() {
+    public void shouldThrowExceptionForNullTicketType() {
         // Arrange: Creating a TicketTypeRequest with a null TicketType
         TicketTypeRequest requestWithNullType = new TicketTypeRequest(null, 1);
 
