@@ -44,6 +44,10 @@ public class TicketServiceImpl implements TicketService {
         if (adultTickets == 0) {
             throw new InvalidPurchaseException("Cannot purchase Child or Infant tickets without purchasing Adult tickets");
         }
+
+        if (totalTickets > 20) {
+            throw new InvalidPurchaseException("Cannot purchase more than 20 tickets at a time");
+        }
     }
 
 }
