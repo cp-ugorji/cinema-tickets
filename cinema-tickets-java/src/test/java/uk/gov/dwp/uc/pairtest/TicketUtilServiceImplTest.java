@@ -10,11 +10,11 @@ import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
 public class TicketUtilServiceImplTest {
 
-    private TicketUtilServiceImpl ticketUtilService;
+    private TicketUtilsImpl ticketUtilService;
 
     @Before
     public void setUp() {
-        ticketUtilService = new TicketUtilServiceImpl();
+        ticketUtilService = new TicketUtilsImpl();
     }
 
     @Test

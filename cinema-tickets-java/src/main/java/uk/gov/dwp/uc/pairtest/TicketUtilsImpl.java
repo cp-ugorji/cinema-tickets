@@ -4,9 +4,9 @@ import uk.gov.dwp.uc.pairtest.domain.TicketConstants;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
-public class TicketUtilServiceImpl implements TicketUtilService{
+public class TicketUtilsImpl implements TicketUtils {
     public void validateAccountId(Long accountId) {
-        if (accountId <= 0) {
+        if (accountId == null || accountId <= 0) {
             throw new InvalidPurchaseException("Invalid account ID");
         }
     }

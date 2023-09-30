@@ -8,14 +8,14 @@ import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 public class TicketServiceImpl implements TicketService {
     private final TicketPaymentService ticketPaymentService;
     private final SeatReservationService seatReservationService;
-    private final TicketUtilService ticketUtilService;
+    private final TicketUtils ticketUtils;
 
     public TicketServiceImpl(TicketPaymentService ticketPaymentService,
                              SeatReservationService seatReservationService,
-                             TicketUtilService ticketUtilService) {
+                             TicketUtils ticketUtils) {
         this.ticketPaymentService = ticketPaymentService;
         this.seatReservationService = seatReservationService;
-        this.ticketUtilService = ticketUtilService;
+        this.ticketUtils = ticketUtils;
     }
 
     /**
@@ -24,11 +24,11 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-        ticketUtilService.validateAccountId(accountId);
-        ticketUtilService.validateTicketRequests(ticketTypeRequests);
+        ticketUtils.validateAccountId(accountId);
+        ticketUtils.validateTicketRequests(ticketTypeRequests);
 
-        int totalAmountToPay = ticketUtilService.calculateTotalAmount(ticketTypeRequests);
-        int totalSeatsToReserve = ticketUtilService.calculateTotalSeatsToReserve(ticketTypeRequests);
+        int totalAmountToPay = ticketUtils.calculateTotalAmount(ticketTypeRequests);
+        int totalSeatsToReserve = ticketUtils.calculateTotalSeatsToReserve(ticketTypeRequests);
 
         ticketPaymentService.makePayment(accountId, totalAmountToPay);
         seatReservationService.reserveSeat(accountId, totalSeatsToReserve);
