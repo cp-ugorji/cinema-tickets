@@ -49,4 +49,32 @@ public class TicketServiceImplTest {
         verify(reservationService).reserveSeat(1L, 3);
     }
 
+    @Test
+    public void shouldHandleOnlyAdultTickets() {
+        ticketService.purchaseTickets(1L, new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 3));
+
+        verify(paymentService).makePayment(1L, 60);
+        verify(reservationService).reserveSeat(1L, 3);
+    }
+
+    @Test
+    public void shouldHandleChildAndInfantWithAdult() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 1),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1),
+                new TicketTypeRequest(TicketTypeRequest.Type.INFANT, 1));
+
+        verify(paymentService).makePayment(1L, 30);
+        verify(reservationService).reserveSeat(1L, 2);
+    }
+
+    @Test
+    public void shouldHandleMaxAllowedTickets() {
+        ticketService.purchaseTickets(1L,
+                new TicketTypeRequest(TicketTypeRequest.Type.ADULT, 19),
+                new TicketTypeRequest(TicketTypeRequest.Type.CHILD, 1));
+
+        verify(paymentService).makePayment(1L, 390);
+        verify(reservationService).reserveSeat(1L, 20);
+    }
 }
