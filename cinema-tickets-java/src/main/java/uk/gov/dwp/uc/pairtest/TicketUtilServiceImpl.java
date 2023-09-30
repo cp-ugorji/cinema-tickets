@@ -11,10 +11,18 @@ public class TicketUtilServiceImpl implements TicketUtilService{
     }
 
     public void validateTicketRequests(TicketTypeRequest... ticketTypeRequests) {
+        if (ticketTypeRequests == null || ticketTypeRequests.length == 0) {
+            throw new InvalidPurchaseException("At least one ticket should be purchased");
+        }
+
         int adultTickets = 0;
         int totalTickets = 0;
 
         for (TicketTypeRequest request : ticketTypeRequests) {
+            if (request == null || request.getTicketType() == null) {
+                throw new InvalidPurchaseException("Ticket request or ticket type cannot be null");
+            }
+
             if (request.getNoOfTickets() <= 0) {
                 throw new InvalidPurchaseException("Number of tickets should be positive");
             }
